@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact - CodeMaster Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, pink, pink);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 90%;
+    }
+    h2 {
+      text-align: center;
+      color: #4caf50;
+    }
+    p {
+      font-size: 16px;
+      margin: 5px 0;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #4caf50;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Contact Us</h2>
+    <p><strong>Email:</strong> support@codemasterquiz.com</p>
+    <p><strong>Phone:</strong> +1-800-QUIZ-ME</p>
+    <hr>
+    <input type="text" id="contactName" placeholder="Your Name">
+    <input type="email" id="contactEmail" placeholder="Your Email">
+    <textarea id="contactMsg" rows="4" placeholder="Your message..."></textarea>
+    <button onclick="submitContact()">Send Message</button>
+  </div>
+
+  <script>
+    function submitContact() {
+      const name = document.getElementById('contactName').value.trim();
+      const email = document.getElementById('contactEmail').value.trim();
+      const message = document.getElementById('contactMsg').value.trim();
+
+      if (!name || !email || !message) {
+        alert("Please fill out all fields.");
+        return;
+      }
+
+      const entry = { name, email, message, time: new Date().toISOString() };
+      let allContacts = JSON.parse(localStorage.getItem("quizContactMessages")) || [];
+      allContacts.push(entry);
+      localStorage.setItem("quizContactMessages", JSON.stringify(allContacts));
+
+      alert("Your message has been sent!");
+      document.getElementById('contactName').value = '';
+      document.getElementById('contactEmail').value = '';
+      document.getElementById('contactMsg').value = '';
+    }
+  </script>
+</body>
+</html>
+

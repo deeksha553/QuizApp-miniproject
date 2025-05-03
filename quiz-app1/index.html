@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="quizApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Code Quiz - Home</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, pink, pink);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background-color: black;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar a {
+      color: white;
+      padding: 10px 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .navbar a:hover {
+      background-color: #e74c3c;
+    }
+
+    .user-info {
+      color: white;
+      margin-right: 20px;
+    }
+
+    .container {
+      padding: 30px;
+      text-align: center;
+    }
+
+    .subjects {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+      max-width: 360px; /* 3 tiles * 100px + gaps */
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .subject-tile {
+      width: 100px;
+      height: 100px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+   
+    
+
+    .subject-tile:hover {
+      transform: scale(1.05);
+    }
+
+    .subject-tile img {
+      width: 80px;
+      height: 80px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 300px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #4caf50;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .results-section {
+      margin-top: 30px;
+    }
+
+    .results-section p {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .result-item {
+      background-color: white;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 10px 0;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+
+    .result-item h3 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .result-item p {
+      margin: 5px 0;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body ng-controller="HomeController">
+
+  <div class="navbar">
+    <div>
+      <a href="#">Home</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+      <a href="myresults.html">My Results</a>
+      <a href="feedback.html">Feedback</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="user-info" ng-if="userName">
+      Logged in as: {{ userName }}
+    </div>
+  </div>
+
+  <div class="container">
+    <div ng-if="!userNameEntered">
+      <h2>Enter Your Name to Start</h2>
+      <input type="text" ng-model="tempName" placeholder="Your name">
+      <br>
+      <button ng-click="setName()">Continue</button>
+    </div>
+
+    <div ng-if="userNameEntered">
+      <h2>Select a Subject</h2>
+   
+      <div class="subjects">
+        <div class="subject-tile" ng-repeat="(key, subject) in subjects" ng-click="startQuiz(key)">
+          <img ng-src="{{ subject.image }}" alt="{{ subject.name }}">
+          <div>{{ subject.name }}</div>
+        </div>
+      </div>
+    
+    </div>
+
+    <!-- Results Section -->
+    <div ng-if="showingResults" class="results-section">
+      <h2>Your Previous Results</h2>
+      <div ng-if="results.length > 0">
+        <div class="result-item" ng-repeat="result in results">
+          <h3>{{ result.subject }} Quiz</h3>
+          <p><strong>Marks Scored:</strong> {{ result.score }} / {{ result.total }}</p>
+        </div>
+      </div>
+      <div ng-if="results.length === 0">
+        <p>No results available. Take a quiz to get started!</p>
+      </div>
+      <button ng-click="showResults(false)">Back</button>
+    </div>
+  </div>
+
+  <script>
+    angular.module("quizApp", [])
+      .controller("HomeController", function($scope) {
+        $scope.tempName = '';
+        $scope.userName = localStorage.getItem('quizUser') || '';
+        $scope.userNameEntered = !!$scope.userName;
+        $scope.results = [];
+        $scope.showingResults = false;
+
+        $scope.setName = function() {
+          if ($scope.tempName.trim()) {
+            $scope.userName = $scope.tempName;
+            $scope.userNameEntered = true;
+            localStorage.setItem('quizUser', $scope.tempName);
+          } else {
+            alert("Please enter your name");
+          }
+        };
+
+        // Subjects
+        $scope.subjects = {
+          java: { name: "Java", image: "https://upload.wikimedia.org/wikipedia/en/3/30/Java_programming_language_logo.svg" },
+          js: { name: "JavaScript", image: "https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" },
+          sql: { name: "SQL", image: "https://upload.wikimedia.org/wikipedia/commons/8/87/Sql_data_base_with_logo.png" },
+          python: { name: "Python", image: "https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" },
+          css: { name: "CSS", image: "https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg" },
+          php: { name: "PHP", image: "https://upload.wikimedia.org/wikipedia/commons/2/27/PHP-logo.svg" }
+        };
+
+        // Start quiz by subject
+        $scope.startQuiz = function(subjectKey) {
+          window.location.href = "quiz.html?subject=" + subjectKey;
+        };
+
+        // Show results
+        $scope.showResults = function(show) {
+          $scope.showingResults = show || false;
+          if ($scope.showingResults) {
+            // Fetch results from localStorage
+            $scope.results = JSON.parse(localStorage.getItem('quizHistory')) || [];
+          }
+        };
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Results</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, pink, pink);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .results-container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    .result-item {
+      background: #f9f9f9;
+      padding: 15px;
+      margin: 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="results-container">
+    <h2>Your Quiz Results</h2>
+    <div id="resultsContainer"></div>
+    <button onclick="goHome()">Go Home</button>
+  </div>
+
+  <script>
+    const subjectMap = {
+      java: "Java",
+      js: "JavaScript",
+      sql: "SQL",
+      python: "Python",
+      css: "CSS",
+      php: "PHP"
+    };
+  
+    const quizHistory = JSON.parse(localStorage.getItem('quizHistory')) || [];
+    const resultsContainer = document.getElementById('resultsContainer');
+  
+    if (quizHistory.length > 0) {
+      quizHistory.forEach(result => {
+        const subjectName = subjectMap[result.subject] || "Unknown";
+        const resultDiv = document.createElement('div');
+        resultDiv.className = 'result-item';
+        resultDiv.innerHTML = `
+          <h3>${subjectName} Quiz</h3>
+          <p><strong>Name:</strong> ${result.name}</p>
+          <p><strong>Marks Scored:</strong> ${result.score} / ${result.total}</p>
+        `;
+        resultsContainer.appendChild(resultDiv);
+      });
+    } else {
+      resultsContainer.innerHTML = '<p>No results found. Take a quiz to see your score here.</p>';
+    }
+  
+    function goHome() {
+      window.location.href = 'index.html';
+    }
+  </script>
+  
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Result</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, pink, pink);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .result-container {
+      background: #ffffff20;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 20px;
+      margin: 10px 0;
+    }
+    .btn {
+      background-color: #fff;
+      color: #0072ff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .btn:hover {
+      background-color: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+  <div class="result-container">
+    <h1>Quiz Completed!</h1>
+    <p id="userName">User: </p>
+    <p id="subject">Subject: </p>
+    <p id="score">Score: </p>
+    <button class="btn" onclick="goHome()">Back to Home</button>
+  </div>
+
+  <script>
+    const result = JSON.parse(localStorage.getItem('quizResult'));
+
+    if (result) {
+      document.getElementById('userName').textContent = 'User: ' + result.name;
+      document.getElementById('subject').textContent = 'Subject: ' + result.subject;
+      document.getElementById('score').textContent = `Score: ${result.score} out of ${result.total}`;
+    } else {
+      document.querySelector('.result-container').innerHTML = `
+        <h1>No Result Found</h1>
+        <p>Please take a quiz first.</p>
+        <button class="btn" onclick="goHome()">Back to Home</button>
+      `;
+    }
+
+    function goHome() {
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>

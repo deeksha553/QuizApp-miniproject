@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en" ng-app="quizApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Code Quiz - Quiz</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, pink, pink);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      width: 90%;
+      max-width: 600px;
+    }
+    h2 {
+      color: #4caf50;
+      text-align: center;
+    }
+    .question {
+      font-size: 18px;
+      margin: 15px 0;
+    }
+    .options label {
+      display: block;
+      margin: 10px 0;
+    }
+    .btn {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body ng-controller="QuizController">
+  <div class="container" ng-if="questions.length">
+    <h2>{{ subjectName }} Quiz</h2>
+    <p><strong>User:</strong> {{ userName }}</p>
+    <div class="question">
+      {{ currentQuestionIndex + 1 }}. {{ questions[currentQuestionIndex].question }}
+    </div>
+    <div class="options">
+      <label ng-repeat="option in questions[currentQuestionIndex].options">
+        <input type="radio"
+               name="question_{{currentQuestionIndex}}"
+               ng-model="$parent.userAnswer"
+               ng-value="option" />
+        {{ option }}
+      </label>
+    </div>
+    <button class="btn" ng-click="next()" ng-disabled="!userAnswer">Next</button>
+  </div>
+
+  <div class="container" ng-if="!questions.length">
+    <h2>No subject selected or invalid subject.</h2>
+    <p><a href="index.html">Go back to subject selection</a></p>
+  </div>
+
+  <script src="quiz-logic.js"></script>
+</body>
+</html>
